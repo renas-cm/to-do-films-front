@@ -1,17 +1,27 @@
 <script setup>
-import axios from 'axios';
+import { onMounted } from 'vue';
+import { useFilmsStore } from '@/stores/film';
 
-async function getFilms() {
-    const response = await axios.get('http://127.0.0.1:8000/Filmes/')
-    return response.results
-}
+const filmsStore = useFilmsStore();
 
-getFilms()
+onMounted (async() => {
+  await filmsStore.listFilms();
+});
 
 </script>
 
 <template>
-.
+  <div>
+    <div class="tittleWatch">
+      <h1>Filmes Para ver</h1>
+    </div>
+
+    <div class="toWatchList">
+      <div v-for="film in useFilmsStore.films" :key="film.id">
+        {{ film.Titulo }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
