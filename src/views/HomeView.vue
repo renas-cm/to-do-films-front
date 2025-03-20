@@ -8,6 +8,7 @@ onMounted (async() => {
   await filmsStore.listFilms();
 });
 
+
 </script>
 
 <template>
@@ -17,7 +18,7 @@ onMounted (async() => {
     </div>
 
     <div class="toWatchList">
-      <div v-for="film in useFilmsStore.films" :key="film.id">
+      <div v-for="film in filmsStore.state.films" :key="film.id">
         {{ film.Titulo }}
       </div>
     </div>

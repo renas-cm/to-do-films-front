@@ -18,5 +18,7 @@ export const useFilmsStore = defineStore('listFilms', () => {
     }
   }
 
-  return { state, listFilms }
+  return { state, listFilms, }
 })
+
+
