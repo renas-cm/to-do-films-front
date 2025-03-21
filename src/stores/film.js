@@ -1,7 +1,8 @@
 import { reactive } from 'vue'
 import filmService from '@/services/filmsList'
 import addFilmService from '@/services/addFilm'
-import watchedService from '@/services/watchedFilm'
+import watchedService from '@/services/watchedFilm';
+import deleteService from '@/services/deleteFilm';
 import { defineStore } from 'pinia'
 
 export const useFilmsStore = defineStore('listFilms', () => {
@@ -36,16 +37,42 @@ export const useFilmsStore = defineStore('listFilms', () => {
 
   //watched the film
 
-  const watchedFilm = async (filmData) => {
+  const watchedFilm = async (filmId) => {
     try {
-      const watched = await watchedService.watchedFilm(filmData);
-      state.watchedFilm.push(watched);
+    const watched = await watchedService.watchedFilm(filmId);
+    state.watchedFilm.push(watched);
+    state.films = state.films.filter(film => film !== filmId);
     } catch (error) {
       console.error("Error marking film as watched:", error);
     }
+
   };
 
-  return { state, listFilms, addFilm, watchedFilm };
+  //load the watched films
+
+  const loadWatched = async () => {
+    try {
+      state.watchedFilm = await watchedService.getWatched();
+    }
+    catch (error) {
+      console.error('Error fetching watched films:', error);
+  }
+};
+
+ //delete the film
+
+const deleteFilm = async (film) => {
+  try{
+    console.log(film)
+    const deleteFilm = await deleteService.deleteFilm(film)
+    state.films = state.films.filter(film => film !== deleteFilm)
+  }
+  catch (error){
+    console.error('error deleting film:', error)
+  }
+}
+
+  return { state, listFilms, addFilm, watchedFilm, loadWatched, deleteFilm };
 });
 
 

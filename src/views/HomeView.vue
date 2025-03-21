@@ -4,25 +4,27 @@ import { useFilmsStore } from "@/stores/film";
 
 const filmsStore = useFilmsStore();
 const newFilmTitle = ref("");
-const watched = ref("");
 
 onMounted(async () => {
   await filmsStore.listFilms();
+  await filmsStore.loadWatched();
 });
 
 const addFilm = async () => {
   if (newFilmTitle.value.trim()) {
-    await filmsStore.addFilm({ Titulo: newFilmTitle.value });
+    await filmsStore.addFilm({ Title: newFilmTitle.value });
     newFilmTitle.value = "";
   }
 };
 
-const WatchedFilm = async () => {
-  if (watched.value.trim()) {
-    await filmsStore.watched({ Titulo: watched.value });
-    newFilmTitle.value = "";
-  }
+const watchedFilm = async (filmId) => {
+  await filmsStore.watchedFilm(filmId);
 };
+
+const deleteFilm = async (film) => {
+  await filmsStore.deleteFilm(film);
+};
+
 </script>
 
 <template>
@@ -39,8 +41,8 @@ const WatchedFilm = async () => {
       </div>
 
       <div v-for="film in filmsStore.state.films" :key="film.id">
-        {{ film.Titulo }}
-        <button @click="WatchedFilm">Já vi</button>
+        {{ film.Title }}
+        <button @click="watchedFilm(film); deleteFilm(film)">Já vi</button>
       </div>
     </div>
 
@@ -51,7 +53,7 @@ const WatchedFilm = async () => {
 
       <div>
         <div v-for="watched in filmsStore.state.watchedFilm" :key="watched.id">
-          {{ watched.Titulo }}
+          {{ watched.Title }}
         </div>
       </div>
     </div>

@@ -1,16 +1,29 @@
-import axios from "axios";
+import axios from 'axios'
 
-class WatchedFilmService {
-  async watchedFilmService (watchedFilm) {
+class watchedFilmService {
+  async watchedFilm(filmData) {
     try {
-      const response = await axios.post ("http://127.0.0.1:8000/FilmesAssistidos/", watchedFilm)
-      return response.data;
+      const data = {
+        Title : filmData.id,
+        Analise : null,
+      }
+      const response = await axios.post('http://127.0.0.1:8000/FilmesAssistidos/', data)
+      return response.data
+    } catch (error) {
+      console.error('Error marking film as watched:', error)
+      throw error
     }
-    catch (error) {
-      console.error("Error adding film:", error);
-      throw error;
-    }
+  }
+
+  async getWatched() {
+     try {
+      const response = await axios.get('http://127.0.0.1:8000/FilmesAssistidos/')
+      return response.data
+     }
+     catch (error) {
+      console.error('Error fetching watched films:', error)
+     }
   }
 }
 
-export default new WatchedFilmService();
+export default new watchedFilmService()
