@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import filmService from '@/services/filmsList'
+import addFilmService from '@/services/addFilm'
 import { defineStore } from 'pinia'
 
 export const useFilmsStore = defineStore('listFilms', () => {
@@ -18,7 +19,17 @@ export const useFilmsStore = defineStore('listFilms', () => {
     }
   }
 
-  return { state, listFilms, }
+  //adding the film
+
+  const addFilm = async (filmData) => {
+    try {
+      state.films.push(filmData) = await addFilmService.addFilm(filmData);
+    } catch (error) {
+      console.error("Error adding film:", error);
+    }
+  };
+
+  return { state, listFilms, addFilm }
 })
 
 
