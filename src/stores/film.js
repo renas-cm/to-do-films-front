@@ -1,23 +1,34 @@
 import { reactive } from 'vue'
-import filmService from '@/services/filmsList'
-import addFilmService from '@/services/addFilm'
-import watchedService from '@/services/watchedFilm';
-import deleteService from '@/services/deleteFilm';
 import { defineStore } from 'pinia'
+
+import changeAttributes from '@/services/changeAttribute';
+import getFilmsService from '@/services/getFilms'
+import postFilmService from '@/services/postFilm'
 
 export const useFilmsStore = defineStore('listFilms', () => {
 
   const state = reactive({
     films: [],
-    watchedFilm: [],
+    watchedFilms: [],
     film: null,
   })
 
   //list the films
 
-  const listFilms = async () => {
+  const getFilms = async () => {
     try {
-      state.films = await filmService.getFilms()
+      state.films = await getFilmsService.getFilms()
+    }
+    catch (error) {
+      console.error('Error fetching films:', error)
+    }
+  }
+
+  //list the watched films
+
+  const getWatchedFilms = async () => {
+    try {
+      state.watchedFilms = await getFilmsService.getWatchedFilms()
     }
     catch (error) {
       console.error('Error fetching films:', error)
@@ -26,53 +37,28 @@ export const useFilmsStore = defineStore('listFilms', () => {
 
   //adding the film
 
-  const addFilm = async (filmData) => {
+  const postFilm = async (filmData) => {
     try {
-      const addFilm = await addFilmService.addFilm(filmData);
-      state.films.push(addFilm);
+      const postFilm = await postFilmService.addFilm(filmData);
+      state.films.push(postFilm);
     } catch (error) {
       console.error("Error adding film:", error);
     }
   };
 
-  //watched the film
+  //Changing attribute to (watched = true)
 
-  const watchedFilm = async (filmId) => {
+  const patchFilm = async (filmData) => {
     try {
-    const watched = await watchedService.watchedFilm(filmId);
-    state.watchedFilm.push(watched);
-    state.films = state.films.filter(film => film !== filmId);
+      const watched = await changeAttributes.ChangeAttribute(filmData);
+      return watched;
     } catch (error) {
       console.error("Error marking film as watched:", error);
     }
 
   };
 
-  //load the watched films
-
-  const loadWatched = async () => {
-    try {
-      state.watchedFilm = await watchedService.getWatched();
-    }
-    catch (error) {
-      console.error('Error fetching watched films:', error);
-  }
-};
-
- //delete the film
-
-const deleteFilm = async (film) => {
-  try{
-    console.log(film)
-    const deleteFilm = await deleteService.deleteFilm(film)
-    state.films = state.films.filter(film => film !== deleteFilm)
-  }
-  catch (error){
-    console.error('error deleting film:', error)
-  }
-}
-
-  return { state, listFilms, addFilm, watchedFilm, loadWatched, deleteFilm };
+  return { state, getFilms, postFilm, patchFilm, getWatchedFilms };
 });
 
 
