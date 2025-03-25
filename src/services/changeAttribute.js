@@ -8,8 +8,9 @@ class ChangeAttributeService {
       Watched: true
     }
    try{
-    const response = await axios.patch(`http://127.0.0.1:8000/Filmes/${data.id}/`, data)
+    const response = await axios.patch(`http://127.0.0.1:8000/FilterFilmes/${data.id}/`, data)
     return response.data
+
    }
     catch (error) {
       console.error('Error marking film as watched:', error)

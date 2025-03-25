@@ -3,7 +3,7 @@ import axios from 'axios'
 class FilmsService {
   async getFilms() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/Filmes/?Watched=false')
+      const response = await axios.get("http://127.0.0.1:8000/FilterFilmes/?Watched=False")
       return response.data
     } catch (error) {
       console.error('Error fetching films:', error)
@@ -12,7 +12,7 @@ class FilmsService {
 
   async getWatchedFilms() {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/Filmes/?Watched=true`)
+      const response = await axios.get("http://127.0.0.1:8000/FilterFilmes/?Watched=True")
       console.log(response.data)
       return response.data
     } catch (error) {

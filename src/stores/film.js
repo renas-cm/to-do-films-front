@@ -51,6 +51,8 @@ export const useFilmsStore = defineStore('listFilms', () => {
   const patchFilm = async (filmData) => {
     try {
       const watched = await changeAttributes.ChangeAttribute(filmData);
+      await getFilms();
+      await getWatchedFilms();
       return watched;
     } catch (error) {
       console.error("Error marking film as watched:", error);
